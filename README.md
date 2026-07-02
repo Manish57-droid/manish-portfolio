@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Manish Kushwaha — Portfolio
 
 A Next.js portfolio styled as a code editor (IDE) with depth-based parallax scrolling — dark theme in black / neon green / cyan.
@@ -36,3 +37,6 @@ Then open http://localhost:3000
 - Colors and fonts are defined as design tokens in `tailwind.config.js` — change them there to retheme everything at once.
 - Parallax respects `prefers-reduced-motion`.
 - Sidebar collapses into a drawer on mobile/tablet; tabs scroll horizontally on small screens.
+=======
+# manish-portfolio
+>>>>>>> b682c85a1ce142072f4cd5e95d25b8cbbb677772
