@@ -68,7 +68,6 @@ export default function FeaturesGuide() {
   const [activeCategory, setActiveCategory] = useState(0);
   const [showHint, setShowHint] = useState(false);
 
-  // show hint bubble after 5 seconds on first visit
   useEffect(() => {
     const seen = localStorage.getItem("guide-seen");
     if (!seen) {
@@ -78,6 +77,15 @@ export default function FeaturesGuide() {
       }, 5000);
       return () => clearTimeout(t);
     }
+  }, []);
+
+  // close on Escape
+  useEffect(() => {
+    function onKey(e) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, []);
 
   function handleOpen() {
@@ -110,15 +118,13 @@ export default function FeaturesGuide() {
         )}
       </AnimatePresence>
 
-      {/* floating ? button */}
+      {/* floating button */}
       <motion.button
         onClick={handleOpen}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-2 border border-border bg-panel/90 backdrop-blur-sm px-4 py-2 text-[11px] font-mono text-ink-muted hover:border-accent-green hover:text-accent-green transition-colors"
-        style={{
-          boxShadow: "0 0 16px rgba(61,220,132,0.1)",
-        }}
+        style={{ boxShadow: "0 0 16px rgba(61,220,132,0.1)" }}
       >
         <Keyboard size={13} className="text-accent-green" />
         <span>explore features</span>
@@ -141,15 +147,15 @@ export default function FeaturesGuide() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.92, y: 30 }}
               transition={{ duration: 0.25 }}
-              className="w-full max-w-3xl border border-border bg-void flex flex-col"
+              className="w-full max-w-5xl border border-border bg-void flex flex-col"
               style={{
-                height: "min(680px, 90vh)",
+                height: "min(920px, 95vh)",
                 boxShadow: "0 0 60px rgba(61,220,132,0.12)",
               }}
               onClick={(e) => e.stopPropagation()}
             >
               {/* title bar */}
-              <div className="flex items-center justify-between px-4 py-2.5 border-b border-border bg-panel shrink-0">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-panel shrink-0">
                 <div className="flex items-center gap-2">
                   <div className="flex gap-1.5">
                     <button
@@ -159,7 +165,7 @@ export default function FeaturesGuide() {
                     <span className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
                     <span className="w-3 h-3 rounded-full bg-[#27c93f]" />
                   </div>
-                  <span className="ml-2 text-[12px] text-ink-muted font-mono">
+                  <span className="ml-2 text-[13px] text-ink-muted font-mono">
                     features.guide — interactive portfolio
                   </span>
                 </div>
@@ -167,34 +173,34 @@ export default function FeaturesGuide() {
                   onClick={() => setOpen(false)}
                   className="text-ink-dim hover:text-accent-green transition-colors"
                 >
-                  <X size={14} />
+                  <X size={16} />
                 </button>
               </div>
 
               {/* header */}
-              <div className="px-6 py-4 border-b border-border bg-panel/40 shrink-0">
-                <h2 className="text-lg font-bold text-ink font-mono mb-1">
+              <div className="px-6 py-5 border-b border-border bg-panel/40 shrink-0">
+                <h2 className="text-xl font-bold text-ink font-mono mb-2">
                   <span className="code-keyword">import</span>{" "}
                   <span className="text-accent-green">features</span>{" "}
                   <span className="code-keyword">from</span>{" "}
                   <span className="code-string">&quot;./manish-portfolio&quot;</span>
                 </h2>
-                <p className="text-[12px] text-ink-muted">
+                <p className="text-[13px] text-ink-muted">
                   This portfolio is packed with interactive features. Here&apos;s everything you can do!
                 </p>
               </div>
 
               <div className="flex flex-1 overflow-hidden">
                 {/* category sidebar */}
-                <div className="w-48 border-r border-border bg-panel/30 overflow-y-auto shrink-0">
+                <div className="w-56 border-r border-border bg-panel/30 overflow-y-auto shrink-0">
                   {FEATURES.map((cat, i) => (
                     <button
                       key={i}
                       onClick={() => setActiveCategory(i)}
-                      className={`w-full text-left px-3 py-3 text-[11px] font-mono border-b border-border/40 transition-colors flex items-center gap-2 ${
+                      className={`w-full text-left px-4 py-4 text-[12px] font-mono border-b border-border/40 transition-colors flex items-center gap-2 border-l-2 ${
                         activeCategory === i
-                          ? "bg-panel text-ink border-l-2"
-                          : "text-ink-muted hover:text-ink hover:bg-panel/50 border-l-2 border-l-transparent"
+                          ? "bg-panel text-ink"
+                          : "text-ink-muted hover:text-ink hover:bg-panel/50 border-l-transparent"
                       }`}
                       style={
                         activeCategory === i
@@ -202,17 +208,21 @@ export default function FeaturesGuide() {
                           : {}
                       }
                     >
-                      <span>{cat.category.split(" ")[0]}</span>
+                      <span className="text-base">{cat.category.split(" ")[0]}</span>
                       <span className="truncate">{cat.category.split(" ").slice(1).join(" ")}</span>
                       {activeCategory === i && (
-                        <ChevronRight size={10} className="ml-auto shrink-0" style={{ color: cat.color }} />
+                        <ChevronRight
+                          size={12}
+                          className="ml-auto shrink-0"
+                          style={{ color: cat.color }}
+                        />
                       )}
                     </button>
                   ))}
                 </div>
 
                 {/* feature items */}
-                <div className="flex-1 overflow-y-auto p-5">
+                <div className="flex-1 overflow-y-auto p-6">
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={activeCategory}
@@ -222,27 +232,27 @@ export default function FeaturesGuide() {
                       transition={{ duration: 0.15 }}
                     >
                       <h3
-                        className="text-sm font-bold font-mono mb-4"
+                        className="text-base font-bold font-mono mb-5"
                         style={{ color: FEATURES[activeCategory].color }}
                       >
                         {FEATURES[activeCategory].category}
                       </h3>
 
-                      <div className="space-y-3">
+                      <div className="space-y-4">
                         {FEATURES[activeCategory].items.map((item, i) => (
                           <motion.div
                             key={i}
                             initial={{ opacity: 0, y: 8 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: i * 0.05 }}
-                            className="flex items-start gap-4 border border-border bg-panel/40 px-4 py-3 hover:border-opacity-60 transition-colors"
+                            className="flex items-start gap-5 border bg-panel/40 px-5 py-4 hover:bg-panel/70 transition-colors"
                             style={{
                               borderColor: `${FEATURES[activeCategory].color}20`,
                             }}
                           >
                             {/* key badge */}
                             <div
-                              className="shrink-0 border px-2 py-1 text-[10px] font-mono font-bold min-w-[44px] text-center"
+                              className="shrink-0 border px-3 py-2 text-[12px] font-mono font-bold min-w-[56px] text-center"
                               style={{
                                 borderColor: `${FEATURES[activeCategory].color}40`,
                                 color: FEATURES[activeCategory].color,
@@ -253,10 +263,10 @@ export default function FeaturesGuide() {
                             </div>
 
                             <div className="flex-1 min-w-0">
-                              <p className="text-[13px] text-ink font-semibold mb-0.5">
+                              <p className="text-[15px] text-ink font-semibold mb-1">
                                 {item.label}
                               </p>
-                              <p className="text-[11px] text-ink-muted">
+                              <p className="text-[12px] text-ink-muted leading-relaxed">
                                 {item.hint}
                               </p>
                             </div>
@@ -269,12 +279,15 @@ export default function FeaturesGuide() {
               </div>
 
               {/* bottom bar */}
-              <div className="px-4 py-2.5 border-t border-border bg-panel shrink-0 flex items-center justify-between">
-                <span className="text-[10px] text-ink-dim font-mono">
+              <div className="px-5 py-3 border-t border-border bg-panel shrink-0 flex items-center justify-between">
+                <span className="text-[11px] text-ink-dim font-mono">
                   {FEATURES.reduce((s, c) => s + c.items.length, 0)} features total · Press{" "}
-                  <kbd className="border border-border px-1 text-accent-green">Esc</kbd> to close
+                  <kbd className="border border-border px-1.5 py-0.5 text-accent-green text-[10px]">
+                    Esc
+                  </kbd>{" "}
+                  to close
                 </span>
-                <span className="text-[10px] text-accent-green font-mono animate-pulse">
+                <span className="text-[11px] text-accent-green font-mono animate-pulse">
                   ● enjoy exploring
                 </span>
               </div>
