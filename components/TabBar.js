@@ -5,9 +5,13 @@ import { Circle, X } from "lucide-react";
 const TABS = [
   { id: "about", label: "about.tsx" },
   { id: "skills", label: "skills.json" },
+  { id: "constellation", label: "constellation.tsx" },
   { id: "projects", label: "projects/" },
   { id: "experience", label: "experience.md" },
+  { id: "github", label: "github-stats.json" },
   { id: "blog", label: "blog/" },
+  { id: "messages", label: "messages.log" },
+  { id: "visitors", label: "visitor-map.tsx" },
   { id: "contact", label: "contact.tsx" },
 ];
 

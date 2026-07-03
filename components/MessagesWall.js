@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { GitCommit, Send, Loader2, Terminal, Globe } from "lucide-react";
 import { supabase } from "../lib/supabase";
+import { trackMessage } from "./Achievements";
 
 function timeAgo(dateStr) {
   const diff = Date.now() - new Date(dateStr).getTime();
@@ -98,6 +99,7 @@ export default function MessagesWall() {
       setName("");
       setMessage("");
       setSuccess(true);
+      trackMessage();
       setTimeout(() => setSuccess(false), 3000);
     }
     setPosting(false);

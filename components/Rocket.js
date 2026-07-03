@@ -136,7 +136,7 @@ export default function Rocket() {
         initialY={100}
         speed={1.4}
       />
-      */}
+      
       <RocketUnit
         color1="#56e8d4"
         color2="#3ddc84"
@@ -145,6 +145,7 @@ export default function Rocket() {
         initialY={300}
         speed={1.0}
       /> 
+      */}
       
       <RocketUnit
         color1="#e8c252"

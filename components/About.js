@@ -6,6 +6,7 @@ import { Download, ArrowDownToLine, User } from "lucide-react";
 import Image from "next/image";
 import SectionFrame from "./SectionFrame";
 import Tilt3D from "./Tilt3D";
+import LiveClock from "./LiveClock";
 
 export default function About() {
   const ref = useRef(null);
@@ -100,6 +101,11 @@ export default function About() {
               <ArrowDownToLine size={16} />
               get in touch
             </a>
+          </div>
+          
+          {/* Live clock */ }
+          <div className="mt-8">
+            <LiveClock />
           </div>
         </motion.div>
 
