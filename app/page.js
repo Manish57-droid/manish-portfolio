@@ -23,6 +23,7 @@ import LoadingScreen from "../components/LoadingScreen";
 import ExtraEffects from "../components/ExtraEffects";
 import Constellation from "../components/Constellation";
 import ScrollProgress from "../components/ScrollProgress";
+import ThemeToggle from "../components/ThemeToggle";
 
 const SECTION_IDS = ["about", "skills", "constellation", "projects", "experience", "github", "blog", "messages", "visitors", "contact"];
 
@@ -82,6 +83,7 @@ export default function Home() {
       <Achievements />
       <ExtraEffects />
       <ScrollProgress />
+      <ThemeToggle />
       <AnimatePresence>
         {terminalOpen && (
           <Terminal onClose={() => setTerminalOpen(false)} />

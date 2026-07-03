@@ -7,19 +7,19 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        void: "#090c0d",
-        panel: "#0e1414",
-        panel2: "#111a19",
-        border: "#1c2826",
+        void:   "var(--void)",
+        panel:  "var(--panel)",
+        panel2: "var(--panel2)",
+        border: "var(--border)",
         accent: {
-          green: "#3ddc84",
-          cyan: "#56e8d4",
-          amber: "#e8c252",
+          green: "var(--green)",
+          cyan:  "var(--cyan)",
+          amber: "var(--amber)",
         },
         ink: {
-          DEFAULT: "#d4dadb",
-          muted: "#5c6b6b",
-          dim: "#3a4544",
+          DEFAULT: "var(--ink)",
+          muted:   "var(--ink-mut)",
+          dim:     "var(--ink-dim)",
         },
       },
       fontFamily: {
@@ -28,15 +28,15 @@ module.exports = {
       },
       animation: {
         blink: "blink 1.1s step-end infinite",
-        scan: "scan 6s linear infinite",
+        scan:  "scan 6s linear infinite",
       },
       keyframes: {
         blink: {
-          "0%, 49%": { opacity: "1" },
+          "0%, 49%":  { opacity: "1" },
           "50%, 100%": { opacity: "0" },
         },
         scan: {
-          "0%": { transform: "translateY(-100%)" },
+          "0%":   { transform: "translateY(-100%)" },
           "100%": { transform: "translateY(100%)" },
         },
       },
