@@ -21,16 +21,7 @@ const PROJECTS = [
     stack: ["Next.js", "Express", "PostgreSQL", "AWS EC2"],
     github: "https://github.com/Manish57-droid/kesh-fitness",
     live: "https://kesh-fitness.vercel.app/",
-  },
-  {/*{
-    file: "datalens.tsx",
-    name: "DataLens",
-    desc: "A data analysis playground that uses Pandas and NumPy on the backend to clean and visualize uploaded CSV datasets, with Orange-powered workflow templates.",
-    stack: ["Python", "Pandas", "NumPy", "Flask"],
-    github: "https://github.com/Manish57-droid",
-    live: "#",
-  },
-  */}
+  }
 ];
 
 export default function Projects() {
