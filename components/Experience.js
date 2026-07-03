@@ -6,7 +6,7 @@ import SectionFrame from "./SectionFrame";
 const TIMELINE = [
   {
     tag: "v3.0.0",
-    date: "2025 — Present",
+    date: "2024 — Present",
     title: "Full Stack Developer (Freelance / Contract)",
     desc: "Designing and building full stack web applications for clients, handling everything from database schema to deployment on AWS.",
   },
@@ -18,13 +18,13 @@ const TIMELINE = [
   },
   {
     tag: "v2.0.0",
-    date: "2022 — 2024",
+    date: "2020 — 2024",
     title: "B.Tech in Computer Science Engineering",
     desc: "Studied core CS fundamentals — data structures, algorithms, databases and operating systems — while building side projects.",
   },
   {
     tag: "v1.0.0",
-    date: "2022",
+    date: "2020",
     title: "Started the journey",
     desc: "Wrote my first lines of code and got hooked on building things for the web.",
   },
