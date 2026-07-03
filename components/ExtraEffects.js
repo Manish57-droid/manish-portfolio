@@ -119,98 +119,172 @@ function useAmbientSound() {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       ctxRef.current = ctx;
 
-      // resume if suspended (browser autoplay policy)
-      if (ctx.state === "suspended") {
-        await ctx.resume();
-      }
+      if (ctx.state === "suspended") await ctx.resume();
 
-      const masterGain = ctx.createGain();
-      masterGain.gain.setValueAtTime(0, ctx.currentTime);
-      masterGain.gain.linearRampToValueAtTime(1, ctx.currentTime + 1.5);
-      masterGain.connect(ctx.destination);
-      gainRef.current = masterGain;
+      const master = ctx.createGain();
+      master.gain.setValueAtTime(0, ctx.currentTime);
+      master.gain.linearRampToValueAtTime(0.7, ctx.currentTime + 3);
+      master.connect(ctx.destination);
+      gainRef.current = master;
 
       const nodes = [];
 
-      // base drone — A1 note
-      const drone = ctx.createOscillator();
-      const droneGain = ctx.createGain();
-      drone.type = "sine";
-      drone.frequency.setValueAtTime(55, ctx.currentTime);
-      droneGain.gain.setValueAtTime(0.3, ctx.currentTime);
-      drone.connect(droneGain);
-      droneGain.connect(masterGain);
-      drone.start();
-      nodes.push(drone);
+      // reverb convolver for spacious feel
+      const convolver = ctx.createConvolver();
+      const reverbLen = ctx.sampleRate * 3;
+      const reverbBuf = ctx.createBuffer(2, reverbLen, ctx.sampleRate);
+      for (let c = 0; c < 2; c++) {
+        const data = reverbBuf.getChannelData(c);
+        for (let i = 0; i < reverbLen; i++) {
+          data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / reverbLen, 2);
+        }
+      }
+      convolver.buffer = reverbBuf;
+      const reverbGain = ctx.createGain();
+      reverbGain.gain.setValueAtTime(0.4, ctx.currentTime);
+      convolver.connect(reverbGain);
+      reverbGain.connect(master);
 
-      // slow LFO wobble on drone
-      const lfo = ctx.createOscillator();
-      const lfoGain = ctx.createGain();
-      lfo.type = "sine";
-      lfo.frequency.setValueAtTime(0.08, ctx.currentTime);
-      lfoGain.gain.setValueAtTime(4, ctx.currentTime);
-      lfo.connect(lfoGain);
-      lfoGain.connect(drone.frequency);
-      lfo.start();
-      nodes.push(lfo);
+      // deep sub bass pad — very soft
+      const bass = ctx.createOscillator();
+      const bassGain = ctx.createGain();
+      bass.type = "sine";
+      bass.frequency.setValueAtTime(40, ctx.currentTime);
+      bassGain.gain.setValueAtTime(0.12, ctx.currentTime);
+      bass.connect(bassGain);
+      bassGain.connect(master);
+      bass.start();
+      nodes.push(bass);
 
-      // harmonic — A2
-      const harm = ctx.createOscillator();
-      const harmGain = ctx.createGain();
-      harm.type = "triangle";
-      harm.frequency.setValueAtTime(110, ctx.currentTime);
-      harmGain.gain.setValueAtTime(0.15, ctx.currentTime);
-      harm.connect(harmGain);
-      harmGain.connect(masterGain);
-      harm.start();
-      nodes.push(harm);
+      // warm mid pad — A2
+      const pad1 = ctx.createOscillator();
+      const pad1Gain = ctx.createGain();
+      pad1.type = "triangle";
+      pad1.frequency.setValueAtTime(110, ctx.currentTime);
+      pad1Gain.gain.setValueAtTime(0.08, ctx.currentTime);
+      pad1.connect(pad1Gain);
+      pad1Gain.connect(convolver);
+      pad1Gain.connect(master);
+      pad1.start();
+      nodes.push(pad1);
 
-      // high shimmer — E5
+      // soft harmony — E3
+      const pad2 = ctx.createOscillator();
+      const pad2Gain = ctx.createGain();
+      pad2.type = "sine";
+      pad2.frequency.setValueAtTime(165, ctx.currentTime);
+      pad2Gain.gain.setValueAtTime(0.06, ctx.currentTime);
+      pad2.connect(pad2Gain);
+      pad2Gain.connect(convolver);
+      pad2Gain.connect(master);
+      pad2.start();
+      nodes.push(pad2);
+
+      // high crystal shimmer — A4
       const shimmer = ctx.createOscillator();
       const shimmerGain = ctx.createGain();
       shimmer.type = "sine";
-      shimmer.frequency.setValueAtTime(659, ctx.currentTime);
+      shimmer.frequency.setValueAtTime(440, ctx.currentTime);
       shimmerGain.gain.setValueAtTime(0, ctx.currentTime);
-      shimmerGain.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 3);
+      shimmerGain.gain.linearRampToValueAtTime(0.03, ctx.currentTime + 4);
       shimmer.connect(shimmerGain);
-      shimmerGain.connect(masterGain);
+      shimmerGain.connect(convolver);
+      shimmerGain.connect(master);
       shimmer.start();
       nodes.push(shimmer);
 
-      // pad — A3
-      const pad = ctx.createOscillator();
-      const padGain = ctx.createGain();
-      pad.type = "sine";
-      pad.frequency.setValueAtTime(220, ctx.currentTime);
-      padGain.gain.setValueAtTime(0.1, ctx.currentTime);
-      pad.connect(padGain);
-      padGain.connect(masterGain);
-      pad.start();
-      nodes.push(pad);
+      // very slow LFO breathing on pad1
+      const lfo1 = ctx.createOscillator();
+      const lfo1Gain = ctx.createGain();
+      lfo1.type = "sine";
+      lfo1.frequency.setValueAtTime(0.05, ctx.currentTime);
+      lfo1Gain.gain.setValueAtTime(0.04, ctx.currentTime);
+      lfo1.connect(lfo1Gain);
+      lfo1Gain.connect(pad1Gain.gain);
+      lfo1.start();
+      nodes.push(lfo1);
 
-      // typewriter ticks
-      let tickTimeout;
-      function tick() {
+      // slow LFO on shimmer for twinkling effect
+      const lfo2 = ctx.createOscillator();
+      const lfo2Gain = ctx.createGain();
+      lfo2.type = "sine";
+      lfo2.frequency.setValueAtTime(0.12, ctx.currentTime);
+      lfo2Gain.gain.setValueAtTime(0.02, ctx.currentTime);
+      lfo2.connect(lfo2Gain);
+      lfo2Gain.connect(shimmerGain.gain);
+      lfo2.start();
+      nodes.push(lfo2);
+
+      // gentle pitch drift on bass
+      const lfo3 = ctx.createOscillator();
+      const lfo3Gain = ctx.createGain();
+      lfo3.type = "sine";
+      lfo3.frequency.setValueAtTime(0.03, ctx.currentTime);
+      lfo3Gain.gain.setValueAtTime(1.5, ctx.currentTime);
+      lfo3.connect(lfo3Gain);
+      lfo3Gain.connect(bass.frequency);
+      lfo3.start();
+      nodes.push(lfo3);
+
+      // soft pink noise for warmth
+      function createPinkNoise() {
+        const bufSize = ctx.sampleRate * 2;
+        const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+        const data = buf.getChannelData(0);
+        let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+        for (let i = 0; i < bufSize; i++) {
+          const white = Math.random() * 2 - 1;
+          b0 = 0.99886*b0 + white*0.0555179;
+          b1 = 0.99332*b1 + white*0.0750759;
+          b2 = 0.96900*b2 + white*0.1538520;
+          b3 = 0.86650*b3 + white*0.3104856;
+          b4 = 0.55000*b4 + white*0.5329522;
+          b5 = -0.7616*b5 - white*0.0168980;
+          data[i] = (b0+b1+b2+b3+b4+b5+b6+white*0.5362) * 0.11;
+          b6 = white * 0.115926;
+        }
+        return buf;
+      }
+
+      const noiseSource = ctx.createBufferSource();
+      noiseSource.buffer = createPinkNoise();
+      noiseSource.loop = true;
+      const noiseGain = ctx.createGain();
+      const noiseFilter = ctx.createBiquadFilter();
+      noiseFilter.type = "lowpass";
+      noiseFilter.frequency.setValueAtTime(400, ctx.currentTime);
+      noiseGain.gain.setValueAtTime(0.018, ctx.currentTime);
+      noiseSource.connect(noiseFilter);
+      noiseFilter.connect(noiseGain);
+      noiseGain.connect(master);
+      noiseSource.start();
+      nodes.push(noiseSource);
+
+      // gentle chime notes every few seconds
+      let chimeTimeout;
+      const CHIME_NOTES = [523, 659, 784, 880, 1047];
+      function playChime() {
         if (!ctxRef.current) return;
         try {
-          const buf = ctx.createBuffer(1, ctx.sampleRate * 0.015, ctx.sampleRate);
-          const data = buf.getChannelData(0);
-          for (let i = 0; i < data.length; i++) {
-            data[i] = (Math.random() * 2 - 1) * Math.exp(-i / 150);
-          }
-          const src = ctx.createBufferSource();
-          const g = ctx.createGain();
-          g.gain.setValueAtTime(0.4, ctx.currentTime);
-          src.buffer = buf;
-          src.connect(g);
-          g.connect(masterGain);
-          src.start();
+          const note = CHIME_NOTES[Math.floor(Math.random() * CHIME_NOTES.length)];
+          const osc = ctx.createOscillator();
+          const env = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(note, ctx.currentTime);
+          env.gain.setValueAtTime(0, ctx.currentTime);
+          env.gain.linearRampToValueAtTime(0.06, ctx.currentTime + 0.1);
+          env.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.5);
+          osc.connect(env);
+          env.connect(convolver);
+          env.connect(master);
+          osc.start(ctx.currentTime);
+          osc.stop(ctx.currentTime + 2.5);
         } catch (_) {}
-        tickTimeout = setTimeout(tick, 1000 + Math.random() * 2000);
+        chimeTimeout = setTimeout(playChime, 3000 + Math.random() * 5000);
       }
-      tick();
+      chimeTimeout = setTimeout(playChime, 2000);
 
-      nodesRef.current = { oscillators: nodes, tickTimeout };
+      nodesRef.current = { oscillators: nodes, chimeTimeout };
       setPlaying(true);
 
     } catch (err) {
@@ -220,13 +294,12 @@ function useAmbientSound() {
 
   function stop() {
     try {
-      const { oscillators, tickTimeout } = nodesRef.current || {};
-      clearTimeout(tickTimeout);
+      const { oscillators, chimeTimeout } = nodesRef.current || {};
+      clearTimeout(chimeTimeout);
 
       if (gainRef.current && ctxRef.current) {
         gainRef.current.gain.linearRampToValueAtTime(
-          0,
-          ctxRef.current.currentTime + 0.5
+          0, ctxRef.current.currentTime + 1.5
         );
       }
 
@@ -238,7 +311,7 @@ function useAmbientSound() {
         ctxRef.current = null;
         gainRef.current = null;
         nodesRef.current = [];
-      }, 600);
+      }, 1600);
 
     } catch (_) {}
     setPlaying(false);
