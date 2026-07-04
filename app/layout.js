@@ -24,7 +24,7 @@ export const metadata = {
     title: "Manish Kushwaha — Full Stack Developer",
     description:
       "Full Stack Developer & AWS Certified Cloud Practitioner based in Ranchi, Jharkhand.",
-    url: "https://manish-portfolio-smoky.vercel.app/",
+    url: "https://manish-portfolio-smoky.vercel.app",
     siteName: "Manish Kushwaha Portfolio",
     images: [
       {
@@ -48,6 +48,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${jetbrains.variable} ${inter.variable}`}>
+      <head>
+        {/* ✅ PASTE YOUR ADSENSE SCRIPT HERE — from the AdSense page */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2821572625506761"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className="font-sans antialiased">
         {children}
         <Analytics />
