@@ -26,7 +26,7 @@ import ScrollProgress from "../components/ScrollProgress";
 import ThemeToggle from "../components/ThemeToggle";
 import FeaturesGuide from "../components/FeaturesGuide";
 
-const SECTION_IDS = ["about", "skills", "constellation", "projects", "experience", "github", "blog", "messages", "visitors", "contact"];
+const SECTION_IDS = ["about", "skills", "constellation", "experience", "github", "blog", "messages", "visitors", "contact"];
 
 
 export default function Home() {
@@ -99,7 +99,7 @@ export default function Home() {
         <About />
         <Skills />
         <Constellation />
-        <Projects />
+        {/* <Projects /> */}
         <Experience />
         <GitHubStats />
         <Blog />

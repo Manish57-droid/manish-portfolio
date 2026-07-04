@@ -16,7 +16,7 @@ const FILES = [
   { id: "about", label: "about.tsx", icon: FileCode2 },
   { id: "skills", label: "skills.json", icon: Braces },
   { id: "constellation", label: "constellation.tsx", icon: FileCode2 },
-  { id: "projects", label: "projects/", icon: Folder, isDir: true },
+  {/* { id: "projects", label: "projects/", icon: Folder, isDir: true }, */}
   { id: "experience", label: "experience.md", icon: FileText },
   { id: "github", label: "github-stats.json", icon: Braces },
   { id: "blog", label: "blog/", icon: ImageIcon, isDir: true },

@@ -6,7 +6,7 @@ const TABS = [
   { id: "about", label: "about.tsx" },
   { id: "skills", label: "skills.json" },
   { id: "constellation", label: "constellation.tsx" },
-  { id: "projects", label: "projects/" },
+  {/*{ id: "projects", label: "projects/" },*/}
   { id: "experience", label: "experience.md" },
   { id: "github", label: "github-stats.json" },
   { id: "blog", label: "blog/" },
